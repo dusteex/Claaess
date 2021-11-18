@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class GameValues : MonoBehaviour
+public class GameValues:MonoBehaviour
 {
     [SerializeField] private int _rowsCount;
     [SerializeField] private int _columnsCount;
@@ -10,17 +8,45 @@ public class GameValues : MonoBehaviour
     [SerializeField] private int _ingotsCount;
     [SerializeField] private float _offsetX;
     [SerializeField] private float _offsetY;
+    [SerializeField] private float _toolDurability;
     [SerializeField] private CellType[] _cellTypes;
 
-    public void GetGameValues(ref int rowsCount , ref int columnsCount , ref float offsetX , ref float offsetY,  ref int maxDepth , ref int ingotsCount, ref CellType[] cellTypes)
+    public int GetRowsCount()
     {
-        rowsCount    = _rowsCount;
-        columnsCount = _columnsCount;
-        offsetX      = _offsetX;
-        offsetY      = _offsetY;
-        maxDepth     = _maxDepth;
-        cellTypes    = _cellTypes;
-        ingotsCount  = _ingotsCount;
+        return _rowsCount;
     }
+    public int GetColumnsCount()
+    {
+        return _columnsCount;
+    }
+    public int GetMaxDepth()
+    {
+        return _maxDepth;
+    }
+    public int GetIngotsCount()
+    {
+        return _ingotsCount;
+    }
+    public float GetOffsetX()
+    {
+        return _offsetX;
+    }
+
+    public float GetOffsetY()
+    {
+        return _offsetY;
+    }
+    public float GetToolDurability()
+    {
+        return _toolDurability;
+    }
+
+    public CellType[] GetCellTypes()
+    {
+        return _cellTypes;
+    }
+
+
+
 
 }

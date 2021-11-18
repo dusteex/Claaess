@@ -6,39 +6,30 @@ public class SpawnCells : MonoBehaviour
     [SerializeField] private Transform _anchorTransform; // basically anchor position is  top left 
     [SerializeField] private Transform _fieldTransform;
     [SerializeField] private GameValues _gameValues;
-
-    private float _offsetX;
-    private float _offsetY;
-    private int _rowsCount;
-    private int _columnsCount;
-    private int _maxDepth;
-    private int _ingotsCount;
-    private CellType[] _cellTypes;
+    [SerializeField] private GameStateHandler _gameStateHandler;
 
     private List<Vector2> _ingotCells = new List<Vector2>();
     private Vector3 _anchorPosition;
 
     private void Start()
     {
-        _gameValues.GetGameValues(ref _rowsCount, ref _columnsCount, ref _offsetX, ref _offsetY, ref _maxDepth,ref _ingotsCount, ref _cellTypes);
-  
         Spawn();
     }
 
     private void Spawn()
     {
-        CalculateIngotCellsCoordinates(_rowsCount , _columnsCount , _ingotsCount);
+        CalculateIngotCellsCoordinates(_gameValues.GetRowsCount() , _gameValues.GetColumnsCount(), _gameValues.GetIngotsCount());
 
         _anchorPosition = _anchorTransform.position;
-        for(int i = 0; i < _rowsCount; i++)
+        for(int i = 0; i < _gameValues.GetRowsCount(); i++)
         {
-            for(int j = 0; j < _columnsCount; j++)
+            for(int j = 0; j < _gameValues.GetColumnsCount(); j++)
             {
-                Vector3 cellPosition = _anchorPosition + new Vector3(j * _offsetX, i * _offsetY, 0);
+                Vector3 cellPosition = _anchorPosition + new Vector3(j * _gameValues.GetOffsetX(), i * _gameValues.GetOffsetY(), 0);
                 GameObject currentCell = Instantiate(_cell, cellPosition, Quaternion.identity);
                 SetCorrectOrder(ref currentCell, i);
                 currentCell.transform.SetParent(_fieldTransform);
-                currentCell.GetComponent<Cell>().Init(_maxDepth, _cellTypes,_ingotCells.Contains(new Vector2(i, j))) ;
+                currentCell.GetComponent<Cell>().Init(_gameValues.GetMaxDepth(), _gameValues.GetCellTypes(),_gameStateHandler , _ingotCells.Contains(new Vector2(i, j))) ;
             }
         }
     }
