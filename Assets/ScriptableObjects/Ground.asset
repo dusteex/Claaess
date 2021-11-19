@@ -17,3 +17,6 @@ MonoBehaviour:
   _spawnDepth: 5
   _sprite: {fileID: 1282930353457048253, guid: 5681275e1b8c77442a5dd2bd8f29f733, type: 3}
   _ingotSprite: {fileID: 0}
+  _breakSounds:
+  - {fileID: 8300000, guid: e09756e480831714193bd7960f9bdaba, type: 3}
+  - {fileID: 8300000, guid: 52385c1b4e3f3d64aa9a9d991ae085e7, type: 3}

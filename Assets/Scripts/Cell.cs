@@ -5,13 +5,12 @@ public class Cell : MonoBehaviour
 {
     private int _depth;
     private int _maxDepth;
-    private int _strength;
+    private int _cellStrength;
     private int _ingotDepth = -1;
     private float _deviationY = 0.05f;
     private CellType[] _cellTypes;
     private SpriteRenderer _spriteRenderer;
     private GameStateHandler _gameStateHandler;
-    private bool _stageHasIngot;
     public void Init(int depth , CellType[] cellTypes, GameStateHandler gameStateHandler ,  bool hasIngot = false)
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -38,21 +37,22 @@ public class Cell : MonoBehaviour
 
     public void DigCell()
     {
-        if(_depth == _ingotDepth)
+        if(_depth != _ingotDepth)
         {
-            PickIngot();
-        }
-        else
-        {
-            _strength--;
+            _cellStrength--;
             _gameStateHandler.ReduceToolDurability(1);
+            _gameStateHandler.PlaySound(_cellTypes[_maxDepth - _depth].GetRandomBreakSound());
 
-            if (_strength <= 0)
+            if (_cellStrength <= 0)
             {
                 _depth--;
                 if (_depth <= 0) DestroyCell();
                 else SetStage(_cellTypes[_maxDepth - _depth]);
             }
+        }
+        else
+        {
+            PickIngot();
         }
 
     }
@@ -60,7 +60,7 @@ public class Cell : MonoBehaviour
 
     private void SetStage(CellType cellType)
     {
-        _strength = cellType.GetStrength();
+        _cellStrength = cellType.GetStrength();
 
         if (_depth == _ingotDepth)
         {
@@ -73,7 +73,6 @@ public class Cell : MonoBehaviour
 
     private void PickIngot()
     {
-        Debug.Log("Picked");
         _gameStateHandler.CollectIngot();
         ChangeSprite(_cellTypes[_maxDepth - _depth].GetSprite());
         _ingotDepth = -1;

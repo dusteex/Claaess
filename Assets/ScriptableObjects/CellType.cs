@@ -8,7 +8,7 @@ public class CellType : ScriptableObject
     [SerializeField] private int _spawnDepth;
     [SerializeField] private Sprite _sprite;
     [SerializeField] private Sprite _ingotSprite;
-
+    [SerializeField] private AudioClip[] _breakSounds;
 
     public int GetSpawnDepth()
     {
@@ -26,5 +26,10 @@ public class CellType : ScriptableObject
     public Sprite GetIngotSprite()
     {
         return _ingotSprite;
+    }
+
+    public AudioClip GetRandomBreakSound()
+    {
+        return _breakSounds[Random.Range(0,_breakSounds.Length)];
     }
 }
