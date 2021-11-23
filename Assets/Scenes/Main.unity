@@ -366,6 +366,7 @@ GameObject:
   - component: {fileID: 420343644}
   - component: {fileID: 420343645}
   - component: {fileID: 420343646}
+  - component: {fileID: 420343647}
   m_Layer: 0
   m_Name: Field
   m_TagString: Untagged
@@ -390,6 +391,7 @@ MonoBehaviour:
   _fieldTransform: {fileID: 420343643}
   _gameValues: {fileID: 420343645}
   _gameStateHandler: {fileID: 420343646}
+  _witnessManager: {fileID: 420343647}
 --- !u!4 &420343643
 Transform:
   m_ObjectHideFlags: 0
@@ -431,16 +433,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rowsCount: 5
   _columnsCount: 5
-  _maxDepth: 5
-  _ingotsCount: 3
+  _ingotsCount: 5
   _offsetX: 0.85
   _offsetY: -0.72
-  _toolDurability: 100
+  _toolDurability: 35
   _cellTypes:
   - {fileID: 11400000, guid: 251d5afbe305452488358a43e5b76b5c, type: 2}
   - {fileID: 11400000, guid: 6847a143b4481b14fa7ca02f83aac343, type: 2}
-  - {fileID: 11400000, guid: 6847a143b4481b14fa7ca02f83aac343, type: 2}
-  - {fileID: 11400000, guid: ffa2a13cbd7127342803058691fb9b94, type: 2}
   - {fileID: 11400000, guid: ffa2a13cbd7127342803058691fb9b94, type: 2}
 --- !u!114 &420343646
 MonoBehaviour:
@@ -459,6 +458,20 @@ MonoBehaviour:
   _collectedIngotsText: {fileID: 807537548}
   _audioSource: {fileID: 38270706}
   _scoreSound: {fileID: 8300000, guid: 2e7e5de72888fae4a9d83887de85fda7, type: 3}
+--- !u!114 &420343647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420343641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57e90e250ccd20d49903f3caf09974c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _witnessCount: 9
+  _liarsMaximumCount: 5
 --- !u!1 &515805077
 GameObject:
   m_ObjectHideFlags: 0

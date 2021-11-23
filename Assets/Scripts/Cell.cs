@@ -11,29 +11,21 @@ public class Cell : MonoBehaviour
     private CellType[] _cellTypes;
     private SpriteRenderer _spriteRenderer;
     private GameStateHandler _gameStateHandler;
-    public void Init(int depth , CellType[] cellTypes, GameStateHandler gameStateHandler ,  bool hasIngot = false)
+    public void Init(int maxDepth , CellType[] cellTypes, GameStateHandler gameStateHandler , int ingotDepth = -1)
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _depth = depth;
-        _maxDepth = depth;
+        _maxDepth = maxDepth;
+        _depth = maxDepth;
+        _ingotDepth = ingotDepth;
+
         _cellTypes = cellTypes;
         _gameStateHandler = gameStateHandler;
 
         DescendingSort(ref _cellTypes);
-
-        if (hasIngot)
-        {
-            CalculateIngotDepth();
-        }
-
         SetStage(_cellTypes[_maxDepth - _depth]);
     }
 
 
-    private void CalculateIngotDepth()
-    {
-        _ingotDepth = Random.Range(1 , _depth);
-    }
 
     public void DigCell()
     {
@@ -46,7 +38,7 @@ public class Cell : MonoBehaviour
             if (_cellStrength <= 0)
             {
                 _depth--;
-                if (_depth <= 0) DestroyCell();
+                if (_depth < 0) DestroyCell();
                 else SetStage(_cellTypes[_maxDepth - _depth]);
             }
         }

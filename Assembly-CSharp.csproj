@@ -55,10 +55,12 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\SpawnCells.cs" />
     <Compile Include="Assets\Scripts\Cell.cs" />
+    <Compile Include="Assets\Scripts\GameStateHandler.cs" />
     <Compile Include="Assets\Scripts\GameValues.cs" />
     <Compile Include="Assets\Scripts\ClickHandler.cs" />
     <Compile Include="Assets\ScriptableObjects\CellType.cs" />
-    <Compile Include="Assets\Scripts\GameStateHandler.cs" />
+    <Compile Include="Assets\Scripts\Witness.cs" />
+    <Compile Include="Assets\Scripts\WitnessManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -7,8 +7,9 @@ public class SpawnCells : MonoBehaviour
     [SerializeField] private Transform _fieldTransform;
     [SerializeField] private GameValues _gameValues;
     [SerializeField] private GameStateHandler _gameStateHandler;
+    [SerializeField] private WitnessManager _witnessManager;
 
-    private List<Vector2> _ingotCells = new List<Vector2>();
+    private List<Vector3Int> _ingotCells = new List<Vector3Int>();
     private Vector3 _anchorPosition;
 
     private void Start()
@@ -18,8 +19,8 @@ public class SpawnCells : MonoBehaviour
 
     private void Spawn()
     {
-        CalculateIngotCellsCoordinates(_gameValues.GetRowsCount() , _gameValues.GetColumnsCount(), _gameValues.GetIngotsCount());
-
+        CalculateIngotCellsCoordinates(_gameValues.GetRowsCount() , _gameValues.GetColumnsCount(), _gameValues.GetMaxDepth() , _gameValues.GetIngotsCount());
+        _witnessManager.SpawnWitnesses(_ingotCells);
         _anchorPosition = _anchorTransform.position;
         for(int i = 0; i < _gameValues.GetRowsCount(); i++)
         {
@@ -29,7 +30,7 @@ public class SpawnCells : MonoBehaviour
                 GameObject currentCell = Instantiate(_cell, cellPosition, Quaternion.identity);
                 SetCorrectOrder(ref currentCell, i);
                 currentCell.transform.SetParent(_fieldTransform);
-                currentCell.GetComponent<Cell>().Init(_gameValues.GetMaxDepth(), _gameValues.GetCellTypes(),_gameStateHandler , _ingotCells.Contains(new Vector2(i, j))) ;
+                currentCell.GetComponent<Cell>().Init(_gameValues.GetMaxDepth(), _gameValues.GetCellTypes(),_gameStateHandler , GetIngotPositionInCell(new Vector2(j,i), _ingotCells) ) ;
             }
         }
     }
@@ -39,18 +40,33 @@ public class SpawnCells : MonoBehaviour
         cell.GetComponent<SpriteRenderer>().sortingOrder = sortingOrderLevel;
     }
 
-    private void CalculateIngotCellsCoordinates(int rowsCount , int columnsCount , int ingotsCount )
+    private void CalculateIngotCellsCoordinates(int rowsCount , int columnsCount , int depth ,  int ingotsCount )
     {
-        Vector2 randomCoords;
+        Vector3Int randomCoords;
         for (int i = 0; i < ingotsCount; i++)
         {
-            randomCoords = new Vector2(Random.Range(0, rowsCount), Random.Range(0, columnsCount));
+            randomCoords = new Vector3Int(Random.Range(0, columnsCount), Random.Range(0, rowsCount), Random.Range(0,depth));
 
             while (_ingotCells.Contains(randomCoords)) // It`s need because 2 or more ingots shouldn`t be in 1 cell 
             {
-                randomCoords = new Vector2(Random.Range(0, rowsCount), Random.Range(0, columnsCount));
-            }
+                randomCoords = new Vector3Int(Random.Range(0, columnsCount), Random.Range(0, rowsCount), Random.Range(0, depth));
+            }                                                               
             _ingotCells.Add( randomCoords ) ;
+            Debug.Log(randomCoords);
         }
+    }
+
+    private int GetIngotPositionInCell(Vector2 cellCoords,List<Vector3Int> ingotsCoords )
+    {
+        for(int i = 0; i < ingotsCoords.Count; i++)
+        {
+            if (ingotsCoords[i].x == cellCoords.x && ingotsCoords[i].y == cellCoords.y) return ingotsCoords[i].z;
+        }
+        return -1; // If ingot is not in this cell , return -1
+    }
+
+    public List<Vector3Int> IngotCells()
+    {
+        return _ingotCells;   
     }
 }

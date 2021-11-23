@@ -4,12 +4,12 @@ public class GameValues:MonoBehaviour
 {
     [SerializeField] private int _rowsCount;
     [SerializeField] private int _columnsCount;
-    [SerializeField] private int _maxDepth;
     [SerializeField] private int _ingotsCount;
     [SerializeField] private float _offsetX;
     [SerializeField] private float _offsetY;
     [SerializeField] private float _toolDurability;
     [SerializeField] private CellType[] _cellTypes;
+
 
     public int GetRowsCount()
     {
@@ -21,7 +21,7 @@ public class GameValues:MonoBehaviour
     }
     public int GetMaxDepth()
     {
-        return _maxDepth;
+        return _cellTypes.Length -1 ;
     }
     public int GetIngotsCount()
     {
