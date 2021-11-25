@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Witness 
 {
-   private List<Vector3Int> _ingotsCoords;
-   private bool _isLiar;
-   private int _mode;
-   private string _suggestion;
+    private List<Vector3Int> _ingotsCoords;
+    private bool _isLiar;
+    private int _mode;
+    private string _suggestion;
     private int _ingotsCount;
     private List<int> _ingotRows;
     private List<int> _ingotColumns;
@@ -18,26 +18,44 @@ public class Witness
 
 
 
-    public Witness(List<Vector3Int> ingotsCoords , bool isLiar , int mode)
+    public Witness(List<int> ingotRows, List<int> ingotColumns, List<int> ingotDepths, GameValues gameValues,  bool isLiar , int mode , bool debugMode = false)
     {
-        _ingotsCoords = ingotsCoords;
-        _ingotsCount = ingotsCoords.Count;
+        _ingotsCount = ingotRows.Count;
         _isLiar = isLiar;
         _mode = mode;
 
-        _rows = new List<int>() { 0, 1, 2, 3, 4 };
-        _columns = new List<int>() { 0, 1, 2, 3, 4 };
-        _depths = new List<int>() { 0, 1, 2};
+        _rows = GetListFromStartToEnd(1,gameValues.GetRowsCount());
+        _columns = GetListFromStartToEnd(1, gameValues.GetColumnsCount());
+        _depths = GetListFromStartToEnd(1, gameValues.GetMaxDepth());
 
+        _ingotColumns = new List<int>(ingotColumns);
+        _ingotRows = new List<int>(ingotRows);
+        _ingotDepths = new List<int>(ingotDepths);
 
-        _ingotRows = GetListFromVectorsCoord(_ingotsCoords , 1);
-        _ingotColumns = GetListFromVectorsCoord(_ingotsCoords, 0);
-        _ingotDepths = GetListFromVectorsCoord(_ingotsCoords, 2);
+        if (_mode == 1)
+        {
+            Debug.Log("IngotRows : " + string.Join(" ", _ingotRows));
+            Debug.Log("IngotColumns : " + string.Join(" ", _ingotColumns));
+            Debug.Log("IngotDepths : " + string.Join(" ", _ingotDepths));
+        }
 
+        _suggestion = CreateSuggestion() + (debugMode ? (_isLiar ? " ЛОЖЬ" : " ПРАВДА") : "" );
 
-        _suggestion = CreateSuggestion();
-        Debug.Log(_suggestion);
+    }
 
+    private List<int> GetListFromStartToEnd( int start , int end )
+    {
+        List<int> resultList = new List<int>();
+        for (int i = start; i <= end; i++)
+        {
+            resultList.Add(i);
+        }
+        return resultList;
+    }
+
+    public string GetSuggestion()
+    {
+        return _suggestion;
     }
 
     private string CreateSuggestion( )
@@ -49,67 +67,63 @@ public class Witness
             // Which row has the biggest count of ingots
             case 1:
                 suggestion = GetAreaWithMaxIngots(_ingotRows, _ingotsCount, _isLiar);
-                return "Больше всего слитков в строках: " + suggestion + (_isLiar ? " ЛОЖЬ" : " ПРАВДА") ;
+                if (suggestion == "EQUAL") return "Во всех строках одинаковое количество слитков" ;
+                return "Больше всего слитков в строках: " + suggestion  ;
             // Which column has the biggest count of ingots
             case 2:
-                suggestion = GetAreaWithMaxIngots(_ingotColumns, _ingotsCount ,_isLiar); 
-                return "Больше всего слитков в столбцах: " + suggestion + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
+                suggestion = GetAreaWithMaxIngots(_ingotColumns, _ingotsCount ,_isLiar);
+                if (suggestion == "EQUAL") return "Во всех столбцах одинаковое количество слитков" ;
+                return "Больше всего слитков в столбцах: " + suggestion ;
             // Which depth has the biggest count of ingots
             case 3:
                 suggestion = GetAreaWithMaxIngots(_ingotDepths, _ingotsCount ,  _isLiar);
-                return "Больше всего слитков в глубинах: " + suggestion + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
+                if (suggestion == "EQUAL") return "На всех глубинах одинаковое количество слитков" ;
+                return "Больше всего слитков в глубинах: " + suggestion;
             // Which row has the biggest count of ingots
             case 4: 
                 suggestion = GetAreaWithoutIngots(_rows , _ingotRows , _isLiar);
-                if (suggestion == "") return "Золото есть во всех строках" + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
-                return "Слитков нет в строках:  " + suggestion + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
+                if (suggestion == "") return "Золото есть во всех строках" ;
+                return "Слитков нет в строках:  " + suggestion ;
             // Which column has the biggest count of ingots
             case 5: 
                 suggestion = GetAreaWithoutIngots(_columns, _ingotColumns, _isLiar);
-                if (suggestion == "") return "Золото есть во всех строках" + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
-                return "Слитков нет в столбцах:  " + suggestion + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
+                if (suggestion == "") return "Золото есть во всех cтолбцах" ;
+                return "Слитков нет в столбцах:  " + suggestion ;
             // Which depth has the biggest count of ingots
             case 6:
                 suggestion = GetAreaWithoutIngots(_depths, _ingotDepths, _isLiar);
-                if (suggestion == "") return "Золото есть во всех строках" + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
-                return "Слитков нет в глубинах:  " + suggestion + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
+                if (suggestion == "") return "Золото есть во всех глубинах" ;
+                return "Слитков нет в глубинах:  " + suggestion ;
             // Which row has the biggest count of ingots
             case 7:
                 randomArea = Random.Range(0,_rows.Count());
                 suggestion = GetIngotsCountInArea(_rows , randomArea , _ingotsCount , _isLiar).ToString();
-                return "Слитков в " + (randomArea).ToString() + " строке : " + suggestion + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
+                return "Слитков в " + (randomArea).ToString() + " строке : " + suggestion ;
             // Which column has the biggest count of ingots
             case 8: 
                 randomArea = Random.Range(0, _columns.Count());
                 suggestion = GetIngotsCountInArea(_columns, randomArea, _ingotsCount, _isLiar).ToString();
-                return "Слитков в " + (randomArea).ToString() + " столбце : " + suggestion + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
+                return "Слитков в " + (randomArea).ToString() + " столбце : " + suggestion ;
             // Which depth has the biggest count of ingots
             case 9: 
-                randomArea = Random.Range(0, _rows.Count());
+                randomArea = Random.Range(0, _depths.Count());
                 suggestion = GetIngotsCountInArea(_depths, randomArea, _ingotsCount, _isLiar).ToString();
-                return "Слитков на " + (randomArea).ToString() + " глубине " + suggestion + (_isLiar ? " ЛОЖЬ" : " ПРАВДА");
+                return "Слитков на " + (randomArea).ToString() + " глубине : " + suggestion ;
         }
         return "Ошибка";
     }
 
-    /* Creates a rows list , columns list or depths list
-    For example , GetListFromVectorsCoord( [(1, 0, 0),(2, 0, 0),(3, 0, 0)] , 0)  return [1,2,3] */
-    private List<int> GetListFromVectorsCoord(List<Vector3Int> list , int coordIndex) 
-    {
-        List<int> resultList = new List<int>();
-        foreach(Vector3Int i in list)
-        {
-            resultList.Add(i[coordIndex]);
-        }
-        return resultList; 
-    }
 
     // For modes 1 , 2 and 3 , Finds the row , column or depth with biggest count of ingots
     
     private string GetAreaWithMaxIngots (List<int> ingotsArea , int ingotsCount , bool isLiar)
     {
-        if (isLiar == false) return string.Join(",", GetMaxElementsInList(ingotsArea));
-        else return string.Join("," , GetRandomValuesFromList(ingotsArea,ingotsCount/2));
+        if (isLiar == false)
+        {
+            if (GetMaxElementsInList(ingotsArea).Count == ingotsArea.Count) return "EQUAL";
+            return string.Join(",", GetMaxElementsInList(ingotsArea));
+        }
+        else return string.Join(",", GetRandomValuesFromList(ingotsArea, ingotsCount / 2));
     }
 
     private List<int> GetMaxElementsInList( List<int> list ) 
@@ -174,7 +188,7 @@ public class Witness
     private string GetAreaWithoutIngots(List<int> areaList , List<int> ingotsArea, bool isLiar)
     {
         if (isLiar == false) return string.Join(",", GetListDiscrepancies(areaList, ingotsArea));
-        else return string.Join("," , GetRandomValuesFromList(ingotsArea , ingotsArea.Count));
+        else return string.Join("," , GetRandomValuesFromList(areaList , areaList.Count-1));
     }
 
     private List<int> GetListDiscrepancies(List<int> parentList , List<int> childList )

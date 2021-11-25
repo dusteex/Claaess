@@ -58,9 +58,13 @@
     <Compile Include="Assets\Scripts\GameStateHandler.cs" />
     <Compile Include="Assets\Scripts\GameValues.cs" />
     <Compile Include="Assets\Scripts\ClickHandler.cs" />
+    <Compile Include="Assets\Scripts\WitnessMenu.cs" />
+    <Compile Include="Assets\Scripts\ButtonAnimate.cs" />
     <Compile Include="Assets\ScriptableObjects\CellType.cs" />
+    <Compile Include="Assets\Scripts\ChangeToggleSprite.cs" />
     <Compile Include="Assets\Scripts\Witness.cs" />
     <Compile Include="Assets\Scripts\WitnessManager.cs" />
+    <Compile Include="Assets\Scripts\RestartGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

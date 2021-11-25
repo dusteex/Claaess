@@ -1,15 +1,38 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
-
+using UnityEngine.SceneManagement;
 public class GameStateHandler : MonoBehaviour
 {
+
+    static public bool PlayerCanDig = true;
 
     [SerializeField] GameValues _gameValues;
     [SerializeField] TextMeshProUGUI _durabilityText;
     [SerializeField] TextMeshProUGUI _collectedIngotsText;
     [SerializeField] AudioSource _audioSource;
     [SerializeField] AudioClip _scoreSound;
+
+    //END GAME WINDOW OBJECTS
+    [Header("End Game Window Components")]
+    [SerializeField] private Animator _gameEndWindowAnimator;
+    [SerializeField] private TextMeshProUGUI _gameEndWindowTextField;
+    [SerializeField] private TextMeshProUGUI _gameEndWindowButtonTextField;
+    [SerializeField] private Image _gameEndWindowButtonBackground;
+    private bool isOpen = false;
+
+    //WIN VARIABLES
+    [Header("Win Window Variables")]
+    [SerializeField] private string _winText;
+    [SerializeField] private string _winButtonText;
+    [SerializeField] private Sprite _winButtonSprite;
+
+    [Header("Loose Window Variables")]
+    [SerializeField] private string _looseText;
+    [SerializeField] private string _looseButtonText;
+    [SerializeField] private Sprite _looseButtonSprite;
+
 
     private Dictionary<TextMeshProUGUI,Animator> _textAnimators;
     private float _toolDurability;
@@ -53,13 +76,29 @@ public class GameStateHandler : MonoBehaviour
 
     private void Loose()
     {
-        Debug.Log("You loose");
+        OpenGameEndWindow( _looseText , _looseButtonText , _looseButtonSprite );
     }
     private void Win()
     {
-        Debug.Log("You Win");
-        
+        OpenGameEndWindow(_winText, _winButtonText, _winButtonSprite);
     }
+
+    private void OpenGameEndWindow( string windowText , string buttonText , Sprite buttonBackgroundSprite )
+    {
+        PlayerCanDig = false;
+        _gameEndWindowTextField.text = windowText;
+        _gameEndWindowButtonTextField.text = buttonText;
+        _gameEndWindowButtonBackground.sprite = buttonBackgroundSprite;
+        _gameEndWindowAnimator.SetBool("isOpen", true);
+    }
+
+    public void CloseGameEndWindow()
+    {
+        PlayerCanDig = true;
+        _gameEndWindowAnimator.SetBool("isOpen", false); // AFTER THIS SCENE WILL RELOAD
+    }
+
+
 
     public void ChangeText(TextMeshProUGUI textField , string text)
     {

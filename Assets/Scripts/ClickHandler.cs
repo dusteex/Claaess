@@ -20,7 +20,7 @@ public class ClickHandler : MonoBehaviour
     {
         RaycastHit2D hit = new RaycastHit2D();
         hit = Physics2D.Raycast(_mainCamera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        if(hit)
+        if(hit && GameStateHandler.PlayerCanDig)
         {
             GameObject clickedCell = hit.collider.gameObject;
             clickedCell.GetComponent<Cell>().DigCell();

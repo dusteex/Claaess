@@ -15,14 +15,14 @@ public class Cell : MonoBehaviour
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _maxDepth = maxDepth;
-        _depth = maxDepth;
+        _depth = 0;
         _ingotDepth = ingotDepth;
 
         _cellTypes = cellTypes;
         _gameStateHandler = gameStateHandler;
 
         DescendingSort(ref _cellTypes);
-        SetStage(_cellTypes[_maxDepth - _depth]);
+        SetStage(_cellTypes[_depth]);
     }
 
 
@@ -33,13 +33,13 @@ public class Cell : MonoBehaviour
         {
             _cellStrength--;
             _gameStateHandler.ReduceToolDurability(1);
-            _gameStateHandler.PlaySound(_cellTypes[_maxDepth - _depth].GetRandomBreakSound());
+            _gameStateHandler.PlaySound(_cellTypes[_depth].GetRandomBreakSound());
 
             if (_cellStrength <= 0)
             {
-                _depth--;
-                if (_depth < 0) DestroyCell();
-                else SetStage(_cellTypes[_maxDepth - _depth]);
+                _depth++;
+                if (_depth > _maxDepth) DestroyCell();
+                else SetStage(_cellTypes[_depth]);
             }
         }
         else
@@ -66,7 +66,7 @@ public class Cell : MonoBehaviour
     private void PickIngot()
     {
         _gameStateHandler.CollectIngot();
-        ChangeSprite(_cellTypes[_maxDepth - _depth].GetSprite());
+        ChangeSprite(_cellTypes[_depth].GetSprite());
         _ingotDepth = -1;
     }
     private void ChangeSprite(Sprite cellSprite)
